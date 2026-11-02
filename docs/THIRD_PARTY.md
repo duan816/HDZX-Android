@@ -36,6 +36,6 @@
 | valijson | [tristanpenman/valijson](https://github.com/tristanpenman/valijson) | `v1.1.0` | `src/Utilities/Parsing/CMakeLists.txt` |
 | zstd | [facebook/zstd](https://github.com/facebook/zstd) | `v1.5.7` | `src/Utilities/Compression/CMakeLists.txt` |
 
-MAVLink 仓库和提交由 `cmake/CustomOptions.cmake` 与 `src/MAVLink/CMakeLists.txt` 固定；Qt Android 扩展、串口 Java 驱动等来源见 `src/Android/CMakeLists.txt` 与 `cmake`。字体、图标、模型及其他原有资源保留原作者文件和声明；坐标转换组件的 MIT 许可见 `resources/licenses/coordtransform-MIT.txt`。
+MAVLink 仓库和提交由 `cmake/CustomOptions.cmake` 与 `src/MAVLink/CMakeLists.txt` 固定；Qt Android 扩展、串口 Java 驱动等来源见 `src/Android/CMakeLists.txt` 与 `cmake`。字体、图标、模型及其他原有资源保留原作者文件和声明；NanumGothic（OFL 1.1）和本仓库版本 OpenSans（Apache 2.0）的声明与许可随 APK 的 `android/assets/licenses` 打包；坐标转换组件的 MIT 许可见 `resources/licenses/coordtransform-MIT.txt`。
 
 发布修改后的 APK 时，应同时提供对应应用源码、构建脚本、版本及依赖源码取得方式，并按实际所用组件的许可证附带声明。请勿把私钥、服务密钥或个人配置当作源码发布。

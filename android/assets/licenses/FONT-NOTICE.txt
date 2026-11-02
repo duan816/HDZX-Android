@@ -1,0 +1,7 @@
+NanumGothic Regular / Bold
+Copyright (c) 2011 NHN Corporation. Font designed by Sandoll Communications Inc.
+Licensed under SIL Open Font License 1.1; see NanumGothic-OFL-1.1.txt.
+
+OpenSans Regular / Semibold
+Digitized data copyright (c) 2010-2011 Google Corporation.
+Licensed under Apache License 2.0; see OpenSans-Apache-2.0.txt.

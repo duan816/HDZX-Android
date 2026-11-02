@@ -1,3 +1,5 @@
+> HDZX Android contributors: follow [the root contribution guide](../CONTRIBUTING.md), GPLv3 and the HDZX repository Issues/PRs. The following is preserved upstream QGroundControl guidance for architecture/reference; its upstream dual-license submission policy applies only to contributions to upstream.
+
 # Contributing to QGroundControl
 
 Thank you for considering contributing to QGroundControl! This guide will help you get started with
