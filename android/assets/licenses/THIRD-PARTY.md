@@ -6,6 +6,7 @@
 
 - **Qt 6.10.3**：所用模块与版本见 `.github/build-config.json`；[官方完整对应源码下载目录](https://download.qt.io/official_releases/qt/6.10/6.10.3/single/) 提供 `qt-everywhere-src-6.10.3.tar.xz` 和 ZIP。各模块的 LICENSES 与第三方声明须一并保留。
 - **GStreamer Android 1.28.4**：版本、插件列表和 SDK 校验值见 `.github/build-config.json`、`cmake/GStreamer`；[官方源码目录](https://gstreamer.freedesktop.org/src/) 提供 GStreamer、gst-plugins-base/good/bad/ugly、gst-libav 等组件对应源码。[构建工具 Cerbero](https://gitlab.freedesktop.org/gstreamer/cerbero/-/tree/1.28.4) 中的配方记录其 SDK 依赖源码和构建方式。
+- 本 APK 使用的 GStreamer SDK 自带的第三方许可文件同时保存在 `android/assets/licenses/GStreamer-1.28.4` 并随 APK 分发。
 - Android NDK／SDK 与 JDK 由各工具发行渠道提供，未作为本仓库中的二进制开发环境重新分发。
 
 ## CMake 下载的依赖
