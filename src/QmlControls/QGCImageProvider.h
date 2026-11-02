@@ -1,0 +1,28 @@
+#pragma once
+
+#include <QtCore/QObject>
+#include <QtGui/QImage>
+#include <QtQuick/QQuickImageProvider>
+
+/// \brief This is used to expose images from ImageProtocolHandler
+///
+class QGCImageProvider : public QQuickImageProvider
+{
+public:
+    QGCImageProvider(QQmlImageProviderBase::ImageType type = QQmlImageProviderBase::ImageType::Image);
+    ~QGCImageProvider();
+
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) final;
+    void setImage(const QImage &image, uint8_t vehicleId = 0)
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+        _images[vehicleId] = image.flipped(Qt::Vertical);
+#else
+        _images[vehicleId] = image.mirrored(false, true);
+#endif
+    }
+
+private:
+    QMap<uint8_t, QImage> _images;
+    QImage _dummy;
+};

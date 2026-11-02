@@ -1,0 +1,11 @@
+HDZX Android Open Source Edition
+Maintainer: Duanzhongxu Studio / duan816
+
+Derived from QGroundControl (https://github.com/mavlink/qgroundcontrol).
+Copyright notices of QGroundControl and all other contributors remain applicable.
+The upstream project offers Apache-2.0 / GPL-3.0 licensing; this combined distribution elects GPL-3.0.
+HDZX additions and modifications in this public edition are provided under GPL-3.0.
+
+Third-party code, fonts, icons, model assets and build dependencies retain their own notices and licenses.
+See LICENSE, LICENSE-GPL, LICENSE-APACHE, resources/licenses and upstream file headers.
+Do not infer endorsement by QGroundControl, ArduPilot, PX4, Qt, or hardware manufacturers.

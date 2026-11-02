@@ -1,0 +1,42 @@
+<RCC>
+    <qresource prefix="/licenses">
+        <file alias="coordtransform-MIT.txt">resources/licenses/coordtransform-MIT.txt</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="opensans">resources/fonts/OpenSans-Regular.ttf</file>
+        <file alias="opensans-demibold">resources/fonts/OpenSans-Semibold.ttf</file>
+        <file alias="NanumGothic-Regular">resources/fonts/NanumGothic-Regular.ttf</file>
+        <file alias="NanumGothic-Bold">resources/fonts/NanumGothic-Bold.ttf</file>
+    </qresource>
+    <qresource prefix="/res">
+        <file alias="BingNoTileBytes.dat">resources/BingNoTileBytes.dat</file>
+        <file alias="CameraGimbal.png">resources/CameraGimbal.png</file>
+        <file alias="chevron-double-right.svg">resources/chevron-double-right.svg</file>
+        <file alias="GeoFence.svg">resources/GeoFence.svg</file>
+        <file alias="QGCLogoFull.svg">resources/QGCLogoFull.svg</file>
+        <file alias="HQLogo.png">resources/branding/HDZXLogo.png</file>
+        <file alias="HDZXIntroLogo.png">resources/branding/HDZXIntroLogo.png</file>
+        <file alias="HDZXSettingsBackground.svg">resources/branding/HDZXSettingsBackground.svg</file>
+        <file alias="QGCLogoWhite.svg">resources/QGCLogoWhite.svg</file>
+        <file alias="QGCLogoArrow.svg">resources/QGCLogoArrow.svg</file>
+        <file alias="rtl.svg">resources/rtl.svg</file>
+        <file alias="SplashScreen">resources/branding/HQSplashScreen.png</file>
+        <file alias="takeoff.svg">resources/takeoff.svg</file>
+        <file alias="TrashCan.svg">resources/TrashCan.svg</file>
+        <file alias="TrashDelete.svg">resources/TrashDelete.svg</file>
+        <file alias="XDelete.svg">resources/XDelete.svg</file>
+        <file alias="qgroundcontrol.ico">resources/branding/HDZX.ico</file>
+    </qresource>
+    <qresource prefix="/hdzx">
+        <file alias="ai.svg">resources/hdzx/ai.svg</file>
+        <file alias="heading.svg">resources/hdzx/heading.svg</file>
+        <file alias="attitude-pointer.svg">resources/hdzx/attitude-pointer.svg</file>
+        <file alias="attitude-dial.svg">resources/hdzx/attitude-dial.svg</file>
+        <file alias="attitude-reticle.svg">resources/hdzx/attitude-reticle.svg</file>
+        <file alias="flight.svg">resources/hdzx/flight.svg</file>
+        <file alias="mission.svg">resources/hdzx/mission.svg</file>
+        <file alias="configure.svg">resources/hdzx/configure.svg</file>
+        <file alias="analyze.svg">resources/hdzx/analyze.svg</file>
+        <file alias="settings.svg">resources/hdzx/settings.svg</file>
+    </qresource>
+</RCC>

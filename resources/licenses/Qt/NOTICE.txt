@@ -1,0 +1,5 @@
+Qt 6.10.3 runtime libraries are deployed as separate DLLs.
+Qt source and module license information: https://code.qt.io/cgit/qt/
+This package does not prohibit replacing or debugging the Qt libraries under their applicable license.
+License text source: https://github.com/qt/qtbase/blob/v6.10.3/LICENSES/LGPL-3.0-only.txt
+The HDZX application source is provided in the separate HDZX-Native source archive.

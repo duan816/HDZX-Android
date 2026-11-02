@@ -1,0 +1,99 @@
+#pragma once
+
+#include <QtCore/QObject>
+#include <QtCore/QHash>
+#include <QtCore/QPair>
+#include <QtCore/QPointer>
+#include <QtCore/QSet>
+#include <QtCore/QStringList>
+#include <QtCore/QVariantList>
+#include <QtPositioning/QGeoCoordinate>
+#include <QtQmlIntegration/QtQmlIntegration>
+
+class LinkInterface;
+class Vehicle;
+class QmlObjectListModel;
+class QTimer;
+class VehicleIdConflictManager;
+class RebootConnectionManager;
+
+class MultiVehicleManager : public QObject
+{
+    Q_OBJECT
+    QML_ELEMENT
+    QML_UNCREATABLE("")
+    Q_MOC_INCLUDE("QmlObjectListModel.h")
+    Q_MOC_INCLUDE("LinkInterface.h")
+    Q_MOC_INCLUDE("Vehicle.h")
+    Q_MOC_INCLUDE("VehicleIdConflictManager.h")
+    Q_PROPERTY(VehicleIdConflictManager *idConflicts READ idConflicts CONSTANT)
+    Q_MOC_INCLUDE("RebootConnectionManager.h")
+    Q_PROPERTY(RebootConnectionManager* rebootConnection READ rebootConnection CONSTANT)
+    Q_PROPERTY(bool                 activeVehicleAvailable          READ activeVehicleAvailable                                             NOTIFY activeVehicleAvailableChanged)
+    Q_PROPERTY(bool                 parameterReadyVehicleAvailable  READ parameterReadyVehicleAvailable                                     NOTIFY parameterReadyVehicleAvailableChanged)
+    Q_PROPERTY(Vehicle              *activeVehicle                  READ activeVehicle                      WRITE setActiveVehicle          NOTIFY activeVehicleChanged)
+    Q_PROPERTY(QmlObjectListModel   *vehicles                       READ vehicles                                                           CONSTANT)
+    Q_PROPERTY(QmlObjectListModel   *selectedVehicles               READ selectedVehicles                                                   CONSTANT)
+    Q_PROPERTY(Vehicle              *offlineEditingVehicle          READ offlineEditingVehicle                                              CONSTANT)
+
+public:
+    explicit MultiVehicleManager(QObject *parent = nullptr);
+    ~MultiVehicleManager();
+
+    static MultiVehicleManager *instance();
+
+    void init();
+    VehicleIdConflictManager *idConflicts() const { return _idConflicts; }
+    RebootConnectionManager* rebootConnection()const{return _rebootConnection;}
+    bool acceptVehicleIdFrame(LinkInterface *link, const mavlink_message_t &message);
+    Q_INVOKABLE Vehicle *getVehicleById(int vehicleId) const;
+    Q_INVOKABLE void      selectVehicle(int vehicleId);
+    Q_INVOKABLE void    deselectVehicle(int vehicleId);
+    Q_INVOKABLE void    deselectAllVehicles();
+    QmlObjectListModel *vehicles() const { return _vehicles; }
+    QmlObjectListModel *selectedVehicles() const { return _selectedVehicles; }
+    Vehicle *offlineEditingVehicle() const { return _offlineEditingVehicle; }
+    Vehicle *activeVehicle() const { return _activeVehicle; }
+    void setActiveVehicle(Vehicle *vehicle);
+    bool activeVehicleAvailable() const { return _activeVehicleAvailable; }
+    bool parameterReadyVehicleAvailable() const { return _parameterReadyVehicleAvailable; }
+
+signals:
+    void vehicleAdded(Vehicle *vehicle);
+    void vehicleRemoved(Vehicle *vehicle);
+    void activeVehicleAvailableChanged(bool activeVehicleAvailable);
+    void parameterReadyVehicleAvailableChanged(bool parameterReadyVehicleAvailable);
+    void activeVehicleChanged(Vehicle *activeVehicle);
+
+private slots:
+    void _deleteVehiclePhase1(Vehicle *vehicle); /// This slot is connected to the Vehicle::allLinksDestroyed signal such that the Vehicle is deleted and all other right things happen when the Vehicle goes away.
+    void _deleteVehiclePhase2(Vehicle *vehicle);
+    void _setActiveVehiclePhase2(Vehicle *vehicle);
+    void _vehicleParametersReadyChanged(bool parametersReady);
+    void _sendGCSHeartbeat();
+    void _vehicleHeartbeatInfo(LinkInterface *link, int vehicleId, int componentId, int vehicleFirmwareType, int vehicleType);
+
+private:
+    bool _vehicleExists(int vehicleId);
+    bool _vehicleSelected(int vehicleId);
+    void _setActiveVehicle(Vehicle *vehicle);
+    void _setActiveVehicleAvailable(bool activeVehicleAvailable);
+    void _setParameterReadyVehicleAvailable(bool parametersReady);
+
+    QTimer *_gcsHeartbeatTimer = nullptr;           ///< Timer to emit heartbeats
+    QmlObjectListModel *_vehicles = nullptr;
+    QmlObjectListModel *_selectedVehicles = nullptr;
+    Vehicle *_offlineEditingVehicle = nullptr;      ///< Disconnected vechicle used for offline editing
+    bool _activeVehicleAvailable = false;           ///< true: An active vehicle is available
+    bool _parameterReadyVehicleAvailable = false;   ///< true: An active vehicle with ready parameters is available
+    Vehicle *_activeVehicle = nullptr;              ///< Currently active vehicle from a ui perspective
+    quint64 _activeVehicleSwitchRevision = 0;
+    QList<int> _ignoreVehicleIds;                   ///< List of vehicle id for which we ignore further communication
+    bool _initialized = false;
+    VehicleIdConflictManager *_idConflicts = nullptr;
+    RebootConnectionManager* _rebootConnection=nullptr;
+    QSet<LinkInterface *> _idWatchedLinks;
+    QHash<LinkInterface *, QPair<bool, QString>> _idUsbDetails;
+
+    static constexpr int kGCSHeartbeatRateMSecs = 1000;  ///< Heartbeat rate
+};

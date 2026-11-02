@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""Tests for tools/common/file_traversal.py."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from common.file_traversal import (
+    DEFAULT_SKIP_DIRS,
+    find_repo_root,
+    should_skip_path,
+)
+
+
+class TestFindRepoRoot:
+    def test_find_repo_root(self) -> None:
+        root = find_repo_root(Path(__file__))
+        assert root == Path(__file__).resolve().parents[2]
+
+    def test_exported_source_tree(self, tmp_path: Path) -> None:
+        (tmp_path / "tools" / "setup").mkdir(parents=True)
+        (tmp_path / "CMakeLists.txt").write_text("project(QGC)")
+        (tmp_path / "tools" / "pyproject.toml").write_text("[project]")
+        script = tmp_path / "tools" / "setup" / "install_python.py"
+        script.touch()
+        assert find_repo_root(script) == tmp_path
+        assert find_repo_root(script.parent) == tmp_path
+
+    def test_git_worktree_file(self, tmp_path: Path) -> None:
+        (tmp_path / ".git").write_text("gitdir: /another/checkout/.git/worktrees/qgc")
+        nested = tmp_path / "tools"
+        nested.mkdir()
+        assert find_repo_root(nested) == tmp_path
+
+
+class TestShouldSkipPath:
+    def test_skip_build(self) -> None:
+        assert should_skip_path(Path("/project/build/file.cpp"))
+        assert should_skip_path(Path("/project/src/build/nested.h"))
+
+    def test_skip_libs(self) -> None:
+        assert should_skip_path(Path("/project/libs/external/file.h"))
+
+    def test_skip_cache(self) -> None:
+        assert should_skip_path(Path("/project/.cache/file.cpp"))
+        assert should_skip_path(Path("/project/.ccache/file.cpp"))
+
+    def test_no_skip_src(self) -> None:
+        assert not should_skip_path(Path("/project/src/file.cpp"))
+        assert not should_skip_path(Path("/project/src/Vehicle/Vehicle.h"))
+
+
+class TestDefaultSkipDirs:
+    def test_contents(self) -> None:
+        for entry in ("build", "libs", "node_modules", ".git", ".ccache"):
+            assert entry in DEFAULT_SKIP_DIRS

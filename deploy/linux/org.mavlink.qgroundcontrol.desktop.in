@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=@CMAKE_PROJECT_NAME@
+GenericName=Ground Control Station
+GenericName[zh_CN]=无人机地面站
+Comment=@CMAKE_PROJECT_DESCRIPTION@
+Comment[zh_CN]=HQGC 飞行监控、任务规划与飞控调参
+Icon=@CMAKE_PROJECT_NAME@
+Exec=@CMAKE_PROJECT_NAME@
+Terminal=false
+Categories=Utility;
+Keywords=mavlink;drone;uav;ardupilot;pixhawk;px4;gcs;
+StartupWMClass=@CMAKE_PROJECT_NAME@
