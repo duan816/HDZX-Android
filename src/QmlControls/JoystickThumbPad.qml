@@ -1,11 +1,13 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Window
 
 import QGroundControl
 import QGroundControl.Controls
 
 Item {
     id:             _joyRoot
+    objectName:      "virtualJoystickPad"
 
     property alias  lightColors:            mapPal.lightColors  ///< true: use light colors from QGCMapPalette for drawing
     property real   xAxis:                  0                   ///< Value range [-1,1], negative values left stick, positive values right stick
@@ -17,6 +19,8 @@ Item {
     property bool   touchActive:            false               ///< true: thumb is currently down on the pad
 
     property real   _centerXY:              width / 2
+    property point  _pressPosition:        Qt.point(0, 0)
+    property point  _pressStickPosition:   Qt.point(0, 0)
     property bool   _processTouchPoints:    false
     property color  _fgColor:               QGroundControl.globalPalette.text
     property color  _bgColor:               QGroundControl.globalPalette.window
@@ -33,6 +37,22 @@ Item {
     onStickPositionYChanged:            calculateYAxis()
     onYAxisPositiveRangeOnlyChanged:    calculateYAxis()
     onYAxisReCenterChanged:             yAxisReCentered()
+    onVisibleChanged:                   { if (!visible) cancelInput() }
+    onEnabledChanged:                   { if (!enabled) cancelInput() }
+
+    function cancelInput() {
+        touchActive = false
+        reCenter()
+        // Hidden controls skip position-driven calculations; explicitly clear
+        // stale axes before the next press or a window-focus interruption.
+        xAxis = 0
+        if (yAxisReCenter) yAxis = yAxisPositiveRangeOnly ? 0.5 : 0
+    }
+
+    Connections {
+        target: _joyRoot.Window.window
+        function onActiveChanged() { if (!_joyRoot.Window.window || !_joyRoot.Window.window.active) _joyRoot.cancelInput() }
+    }
 
     function yAxisReCentered() {
         if( yAxisReCenter ) {
@@ -56,17 +76,19 @@ Item {
         if(_joyRoot.height <= 0) {
             return;
         }
+        yPositionAfterResize = Math.max(yAxisPositiveRangeOnly ? 0 : -1, Math.min(1, yPositionAfterResize))
         calculateYAxisMutex = false
         stickPositionY = ( 1 - ( ( yPositionAfterResize + ( !yAxisPositiveRangeOnly ? 1 : 0) ) /  ( yAxisPositiveRangeOnly ? 1 : 2 ) )) * _joyRoot.height // Reverse the CalculateYAxis Procedure
         stickPositionX = _joyRoot.width / 2 // Manual recenter
         calculateYAxisMutex = true
+        calculateYAxis()
     }
 
     function calculateXAxis() {
         if(!_joyRoot.visible) {
             return;
         }
-        var xAxisTemp = stickPositionX / width
+        var xAxisTemp = width > 0 ? stickPositionX / width : 0.5
         xAxisTemp *= 2.0
         xAxisTemp -= 1.0
         xAxis = xAxisTemp
@@ -80,7 +102,7 @@ Item {
             return;
         }
         var fullRange = yAxisPositiveRangeOnly ? 1 : 2
-        var pctUp = 1.0 - (stickPositionY / height)
+        var pctUp = height > 0 ? 1.0 - (stickPositionY / height) : 0.5
         var rangeUp = pctUp * fullRange
         if (!yAxisPositiveRangeOnly) {
             rangeUp -= 1
@@ -103,31 +125,14 @@ Item {
     }
 
     function thumbDown(touchPoints) {
-        // Position the control around the initial thumb position
-        _centerXY = _joyRoot.width / 2  // make sure to know the correct center of the item
-
-        var limitOffset = uiRealX >= _joyRoot.width / 2 ? true : false // as the joystick become small the UI too so we limit the maxOffset for reCentering joystick to prevent misclicks
-        var maxDelta = _joyRoot.x > uiTotalWidth / 2  ? uiTotalWidth - uiRealX - _joyRoot.x - _centerXY : uiRealX
-        var isRightJoystick = _joyRoot.x > uiTotalWidth / 2 ? true : false
-
-        // Check if new xDelta will make joystick to be beyond screen boundaries or can cause a misclick
-        if (!limitOffset && isRightJoystick && touchPoints[0].x  <= maxDelta || !limitOffset && !isRightJoystick && touchPoints[0].x >= maxDelta) {
-            xPositionDelta = touchPoints[0].x - _centerXY
-        } else if (limitOffset && !isRightJoystick && touchPoints[0].x >= _centerXY * 0.25 && touchPoints[0].x <= _centerXY * 2) { // more offset at the side near to the center
-            xPositionDelta = touchPoints[0].x - _centerXY
-        } else if (limitOffset && isRightJoystick && touchPoints[0].x >= 0 && touchPoints[0].x <= _centerXY * 1.75) {
-            xPositionDelta = touchPoints[0].x - _centerXY
-        } else {
-            return;
-        }
-
-        if (yAxisPositiveRangeOnly) {
-            yPositionDelta = touchPoints[0].y - stickPositionY
-        } else {
-            yPositionDelta = touchPoints[0].y - _centerXY
-        }
-        // We need to wait until we move the control to the right position before we process touch points
+        // Input coordinates belong to this pad. Do not reject a valid right-pad
+        // press using page-wide offsets (which change with HUD/layout scaling).
+        if (!touchPoints.length || width <= 0 || height <= 0) return
         _processTouchPoints = true
+        // Keep the current throttle/center on contact; only subsequent drag
+        // changes the command, even if the first touch is near the pad edge.
+        _pressPosition = Qt.point(touchPoints[0].x, touchPoints[0].y)
+        _pressStickPosition = Qt.point(stickPositionX, stickPositionY)
     }
 
     /*
@@ -241,12 +246,12 @@ Item {
 
         onXChanged: {
             if (_processTouchPoints) {
-                _joyRoot.stickPositionX = Math.max(Math.min(touchPoint.x, _joyRoot.width), 0)
+                _joyRoot.stickPositionX = Math.max(Math.min(_pressStickPosition.x + touchPoint.x - _pressPosition.x, _joyRoot.width), 0)
             }
         }
         onYChanged: {
             if (_processTouchPoints) {
-                _joyRoot.stickPositionY = Math.max(Math.min(touchPoint.y, _joyRoot.height), 0)
+                _joyRoot.stickPositionY = Math.max(Math.min(_pressStickPosition.y + touchPoint.y - _pressPosition.y, _joyRoot.height), 0)
             }
         }
     }

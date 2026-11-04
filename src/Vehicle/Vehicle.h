@@ -874,6 +874,7 @@ private slots:
     void _gotProgressUpdate                 (float progressValue);
 
 private:
+    bool _armRequestPending = false;
     void _activeVehicleChanged          (Vehicle* newActiveVehicle);
     void _handlePing                    (LinkInterface* link, mavlink_message_t& message);
     void _handleHomePosition            (mavlink_message_t& message);

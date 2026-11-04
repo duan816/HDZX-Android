@@ -1,0 +1,3 @@
+module QGroundControl
+singleton QGroundControl 1.0 QGroundControl.qml
+singleton ScreenTools 1.0 ScreenTools.qml

@@ -69,8 +69,6 @@ target_sources(${CMAKE_PROJECT_NAME}
         RCChannelMonitorController.h
         HQDashboardController.cc
         HQDashboardController.h
-        HQFlightGeoScene.qml
-        HQFlightDrone3D.qml
         RCToParamDialogController.cc
         RCToParamDialogController.h
         ScreenToolsController.cc
@@ -168,6 +166,8 @@ qt_add_qml_module(QGroundControlControlsModule
         HQAIComparisonDeck.qml
         HQCircularGauge.qml
         HQFlightDial.qml
+        HQFlightGeoScene.qml
+        HQFlightDrone3D.qml
         HQAnimatedNumber.qml
         VehicleIdConflictPanel.qml
         HQRebootConnectionDialog.qml

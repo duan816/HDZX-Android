@@ -15,7 +15,7 @@ set(QGC_CUSTOM_DIR "custom" CACHE STRING "Custom build overlay directory, relati
 # ============================================================================
 
 set(QGC_APP_NAME "HDZX" CACHE STRING "Application name")
-set(HDZX_NATIVE_VERSION "2.0.28" CACHE STRING "HDZX native release version")
+set(HDZX_NATIVE_VERSION "2.0.33" CACHE STRING "HDZX native release version")
 string(TIMESTAMP _copyright_year "%Y")
 set(QGC_APP_COPYRIGHT "Copyright (c) ${_copyright_year} Duanzhongxu Studio." CACHE STRING "Copyright notice")
 set(QGC_APP_DESCRIPTION "HDZX Android Open Source Ground Station" CACHE STRING "Application description")

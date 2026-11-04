@@ -291,6 +291,17 @@ void Vehicle::_commonInit(LinkInterface* link)
     // (e.g. VehicleLinkManager::_addLink() → _updatePrimaryLink → sendMavCommand).
     _mavCmdQueue = new MavCommandQueue(this);
     connect(_mavCmdQueue, &MavCommandQueue::commandResult, this, &Vehicle::mavCommandResult);
+    connect(_mavCmdQueue, &MavCommandQueue::commandResult, this,
+            [this](int, int component, int command, int result, int failure) {
+        if (command != MAV_CMD_COMPONENT_ARM_DISARM || component != _defaultComponentId
+            || !_armRequestPending || failure == MavCmdResultFailureDuplicateCommand
+            || result == MAV_RESULT_IN_PROGRESS) return;
+        _armRequestPending = false;
+        if (result != MAV_RESULT_ACCEPTED && !_armed
+            && MultiVehicleManager::instance()->activeVehicle() == this) {
+            AudioOutput::instance()->sayNavigation(QStringLiteral("解锁失败，请查看报错。"), QStringLiteral("arming"));
+        }
+    });
     _reqMsgCoord = new RequestMessageCoordinator(this, _mavCmdQueue);
     _messageIntervalManager = new MessageIntervalManager(this, _mavCmdQueue, _reqMsgCoord);
     connect(_messageIntervalManager, &MessageIntervalManager::mavlinkMsgIntervalsChanged,
@@ -1490,6 +1501,8 @@ QGeoCoordinate Vehicle::homePosition()
 
 void Vehicle::setArmed(bool armed, bool showError)
 {
+    if (armed && !_armed && !_mavCmdQueue->isPending(_defaultComponentId, MAV_CMD_COMPONENT_ARM_DISARM))
+        _armRequestPending = true;
     // We specifically use COMMAND_LONG:MAV_CMD_COMPONENT_ARM_DISARM since it is supported by more flight stacks.
     sendMavCommand(_defaultComponentId,
                    MAV_CMD_COMPONENT_ARM_DISARM,
@@ -1499,6 +1512,8 @@ void Vehicle::setArmed(bool armed, bool showError)
 
 void Vehicle::forceArm(void)
 {
+    if (!_armed && !_mavCmdQueue->isPending(_defaultComponentId, MAV_CMD_COMPONENT_ARM_DISARM))
+        _armRequestPending = true;
     sendMavCommand(_defaultComponentId,
                    MAV_CMD_COMPONENT_ARM_DISARM,
                    true,    // show error if fails
@@ -1850,7 +1865,11 @@ void Vehicle::_handleFlightModeChanged(const QString& flightMode)
 
 void Vehicle::_announceArmedChanged(bool armed)
 {
-    _say(QString("%1 %2").arg(_vehicleIdSpeech()).arg(armed ? tr("armed") : tr("disarmed")));
+    if (armed) _armRequestPending = false;
+    if (MultiVehicleManager::instance()->activeVehicle() == this) {
+        AudioOutput::instance()->sayNavigation(armed ? QStringLiteral("已解锁。") : QStringLiteral("已锁定。"),
+                                               QStringLiteral("arming"));
+    }
     if(armed) {
         //-- Keep track of armed coordinates
         _armedPosition = _coordinate;

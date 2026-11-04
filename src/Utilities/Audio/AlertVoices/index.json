@@ -362,5 +362,8 @@
   "PosHold，位置保持。": "NAV-26-05.wav",
   "Auto，自动模式。": "NAV-26-06.wav",
   "Mission，任务模式。": "NAV-26-07.wav",
-  "Brake，刹停模式。": "NAV-26-08.wav"
+  "Brake，刹停模式。": "NAV-26-08.wav",
+  "已解锁。": "ARM-29-ON.wav",
+  "已锁定。": "ARM-29-OFF.wav",
+  "解锁失败，请查看报错。": "ARM-29-FAILED.wav"
 }

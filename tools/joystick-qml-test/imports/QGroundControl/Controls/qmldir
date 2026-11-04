@@ -1,0 +1,4 @@
+module QGroundControl.Controls
+JoystickThumbPad 1.0 ../../../../../src/QmlControls/JoystickThumbPad.qml
+QGCMapPalette 1.0 QGCMapPalette.qml
+QGCColoredImage 1.0 QGCColoredImage.qml

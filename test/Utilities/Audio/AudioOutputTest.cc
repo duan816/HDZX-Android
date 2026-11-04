@@ -3,6 +3,7 @@
 #include "AudioOutput.h"
 #include "RecordedAlertPlayer.h"
 #include "Fact.h"
+#include <QtCore/QFile>
 #include <QtCore/QTimer>
 #include <QtCore/QThread>
 #ifdef Q_OS_WIN
@@ -257,6 +258,27 @@ void AudioOutputTest::_testNavigationAnnouncementsUseRecordingsAndCoalesce()
         QVERIFY(item.chinese && item.useRecording);
         QVERIFY(output._recordedAlerts.contains(item.text));
         QVERIFY(item.expiresAt > 0);
+    }
+    output.resetForVehicleChange();
+    QVERIFY(output._speechQueue.isEmpty());
+}
+
+void AudioOutputTest::_testArmingAnnouncementsUseBundledMaleClips()
+{
+    AudioOutput output;
+    Fact volume, muted;
+    volume.setRawValue(100); muted.setRawValue(false);
+    output._volumeFact = &volume; output._mutedFact = &muted;
+    output._initialized = true; output._speakCapable = false; output._speechStarting = true;
+    const QStringList texts{QStringLiteral("已解锁。"), QStringLiteral("已锁定。"), QStringLiteral("解锁失败，请查看报错。")};
+    for (const auto &text : texts) {
+        const QString clip = output._recordedAlerts.value(text);
+        QVERIFY(clip.startsWith(QStringLiteral("ARM-29-")));
+        QVERIFY(QFile::exists(QStringLiteral(":/audio/alerts/") + clip));
+        output.sayNavigation(text, QStringLiteral("arming"));
+        QTRY_COMPARE(output._speechQueue.size(), 1);
+        QTRY_COMPARE(output._speechQueue.front().text, text);
+        QVERIFY(output._speechQueue.front().chinese && output._speechQueue.front().useRecording);
     }
     output.resetForVehicleChange();
     QVERIFY(output._speechQueue.isEmpty());

@@ -181,6 +181,18 @@
             "keywords": "joystick,left handed"
         },
         {
+            "name": "virtualJoystickSize",
+            "shortDesc": "调整飞行界面两侧虚拟摇杆的大小，默认保持原有比例。",
+            "type": "uint32",
+            "default": 100,
+            "min": 50,
+            "max": 150,
+            "increment": 5,
+            "units": "%",
+            "label": "虚拟摇杆大小",
+            "keywords": "joystick,size,scale,虚拟摇杆,大小,缩放"
+        },
+        {
             "name": "gstDebugLevel",
             "shortDesc": "Sets the verbosity of GStreamer debug logging.",
             "longDesc": "Controls the GStreamer debug threshold for all pipeline elements. Changes take effect immediately.",

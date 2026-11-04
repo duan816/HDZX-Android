@@ -11,6 +11,14 @@ import sys
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
+controls_cmake = (ROOT / "src/QmlControls/CMakeLists.txt").read_text(encoding="utf-8")
+# Listing a QML component only in target_sources compiles successfully but does
+# not register its type; the root window then fails at runtime on Android.
+if re.search(r"\bHQFlight(?:GeoScene|Drone3D)\.qml\b", controls_cmake.split("qt_add_qml_module", 1)[0]):
+    raise SystemExit("Flight scene components must be registered in QML_FILES, not target_sources")
+for component in ("HQFlightGeoScene.qml", "HQFlightDrone3D.qml"):
+    if component not in controls_cmake.split("QML_FILES", 1)[1]:
+        raise SystemExit("Missing QML type registration: " + component)
 FILES = subprocess.check_output(["git", "-C", str(ROOT), "ls-files", "-z"]).decode().split("\0")
 FILES = [name for name in FILES if name]
 errors = []

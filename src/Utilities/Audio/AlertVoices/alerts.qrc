@@ -365,4 +365,7 @@
   <file>NAV-26-06.wav</file>
   <file>NAV-26-07.wav</file>
   <file>NAV-26-08.wav</file>
+  <file>ARM-29-ON.wav</file>
+  <file>ARM-29-OFF.wav</file>
+  <file>ARM-29-FAILED.wav</file>
 </qresource></RCC>

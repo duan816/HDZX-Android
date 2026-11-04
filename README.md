@@ -1,4 +1,6 @@
-# HDZX Android · 安卓开源地面站
+# HDZX Android · 开源发布版
+
+**中文** · [English](README.en.md) · [下载最新版 APK](https://github.com/duan816/HDZX-Android/releases/tag/v2.0.33)
 
 <img src="resources/branding/HDZXLogo.png" alt="HDZX" width="88">
 
@@ -7,6 +9,18 @@
 HDZX Android 为手机和平板提供飞行状态查看、航线规划、参数调试和日志分析等工具。项目由段中旭工作室维护；此仓库是独立整理的安卓开源版。
 
 > This is an Android-focused, Chinese-localized ground station derived from QGroundControl. It is maintained independently and is not an official QGroundControl release.
+
+## 界面预览
+
+![安卓平板飞行视图与经典 HUD](docs/screenshots/flight-view.png)
+
+飞行地图、经典 HUD、PID 响应和可调整的手机／平板界面比例，可按使用场景组合。上图为 **2.0.33 在 TB711FU 平板上的实际截图**，未连接飞控，因此遥测显示未上报。更多实机截图及带遥测的参考界面见[界面图册](docs/SCREENSHOTS.md)。
+
+| 任务规划 | PID 响应 |
+|---|---|
+| ![任务规划](docs/screenshots/mission-planning.png) | ![PID 响应](docs/screenshots/pid-response.png) |
+
+**当前版本 2.0.33：**修复因地图组件未注册导致的启动退出。已在 TB711FU 平板覆盖安装验证，用户确认主界面与页面切换不再退出。详见[修改与验证说明](docs/STARTUP-FIX-2.0.33.md)。
 
 ## 功能介绍
 
@@ -50,3 +64,4 @@ HDZX Android 为手机和平板提供飞行状态查看、航线规划、参数�
 ## 反馈
 
 请通过 [Issues](https://github.com/duan816/HDZX-Android/issues) 反馈，并提供设备型号、Android 版本、应用版本、飞控／固件版本和复现步骤。公开日志前请删除坐标、飞行任务和个人信息等不愿公开的内容。
+

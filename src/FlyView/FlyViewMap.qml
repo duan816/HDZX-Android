@@ -328,8 +328,8 @@ FlightMap {
         z: QGroundControl.zOrderMapItems + 1
         sourceItem: Rectangle {
             width: 30; height: 30; radius: 15
-            color: "#E6213547"; border.color: "#FFD166"; border.width: 2
-            QGCLabel { anchors.centerIn: parent; text: "H"; color: "#FFD166"; font.bold: true; font.pixelSize: 19 }
+            color: "#50FFD400"; border.color: "#FFE000"; border.width: 3
+            QGCLabel { anchors.centerIn: parent; text: "H"; color: "#FFF27A"; font.bold: true; font.pixelSize: 19 }
         }
     }
 

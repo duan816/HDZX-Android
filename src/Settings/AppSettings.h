@@ -31,6 +31,7 @@ public:
     DEFINE_SETTINGFACT(virtualJoystick)
     DEFINE_SETTINGFACT(virtualJoystickAutoCenterThrottle)
     DEFINE_SETTINGFACT(virtualJoystickLeftHandedMode)
+    DEFINE_SETTINGFACT(virtualJoystickSize)
     DEFINE_SETTINGFACT(uiScalePercent)
     DEFINE_SETTINGFACT(mobileUiScalePercent)
     DEFINE_SETTINGFACT(mobileUiPresetChosen)

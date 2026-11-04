@@ -195,11 +195,11 @@ Item {
             Rectangle {
                 parent: root
                 visible: !!marker.homePoint && marker.focused
-                x: marker.homePoint ? marker.homePoint.x + 18 : -100
-                y: marker.homePoint ? marker.homePoint.y + 16 : -100
-                width: 76; height: 24; radius: 5
-                color: "#D6292B35"; border.color: "#E3BC75"
-                Label { anchors.centerIn: parent; text: marker.object ? qsTr("H · %1号").arg(marker.object.id) : ""; color: "#F3D39B"; font.pixelSize: 11 }
+                x: marker.homePoint ? marker.homePoint.x - 17 : -100
+                y: marker.homePoint ? marker.homePoint.y - 17 : -100
+                width: 34; height: 34; radius: 17
+                color: "#50FFD400"; border.color: "#FFE000"; border.width: 3
+                Label { anchors.centerIn: parent; text: marker.object ? "H" : ""; color: "#FFF27A"; font.pixelSize: 17; font.bold: true }
             }
         }
     }

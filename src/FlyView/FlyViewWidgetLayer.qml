@@ -160,10 +160,14 @@ Item {
     //-- Virtual Joystick
     Loader {
         id:                         virtualJoystickMultiTouch
-        z:                          QGroundControl.zOrderTopMost + 1
+        objectName:                 "virtualJoystickLayer"
+        // Manual controls stay above ordinary instruments; configuration and modal layers remain above them.
+        z:                          QGroundControl.zOrderTopMost + 50
         anchors.right:              parent.right
-        anchors.rightMargin:        anchors.leftMargin
-        height:                     Math.min(parent.height * 0.25, ScreenTools.defaultFontPixelWidth * 16)
+        anchors.rightMargin:        Math.max(_toolsMargin, toolStrip.width / 2)
+        height:                     Math.min(Math.min(parent.height * 0.25, ScreenTools.defaultFontPixelWidth * 16)
+                                                * QGroundControl.settingsManager.appSettings.virtualJoystickSize.rawValue / 100,
+                                                parent.height * 0.4, Math.max(0, width * 0.45))
         visible:                    _virtualJoystickEnabled && !QGroundControl.videoManager.fullScreen && !(_activeVehicle ? _activeVehicle.usingHighLatencyLink : false)
         anchors.bottom:             parent.bottom
         anchors.bottomMargin:       bottomLoaderMargin

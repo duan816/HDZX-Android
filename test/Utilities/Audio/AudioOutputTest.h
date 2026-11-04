@@ -15,6 +15,7 @@ private slots:
 #endif
     void _testModeAnnouncementWithoutSystemTts();
     void _testNavigationAnnouncementsUseRecordingsAndCoalesce();
+    void _testArmingAnnouncementsUseBundledMaleClips();
     void _testSpeakingWarningFollowsPlaybackNotReceipt();
     void _testSpeakingWarningClearsForResetMuteAndNonAlert();
     void _testVehicleChangeClearsStalledClip();
